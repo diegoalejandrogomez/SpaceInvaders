@@ -7,6 +7,7 @@ public class HeroController : MonoBehaviour {
     public float Speed = 1;
     public GameObject Bullet;
     public float ShootCooldown;
+    public AudioClip ShootAudio;
 
     private bool shooting = false;
 	// Use this for initialization
@@ -23,11 +24,18 @@ public class HeroController : MonoBehaviour {
 
     void FixedUpdate () {
         Vector3 position = Hero.GetComponent<Transform>().position;
-        position.x += Input.GetAxis("Horizontal") * Speed;
+        int input = 0;
+        if (Input.GetAxis("Horizontal") > 0)
+            input = 1;
+        else if (Input.GetAxis("Horizontal") < 0)
+            input = -1;
+
+        position.x += input * 0.3f  * Speed;
         Hero.GetComponent<Transform>().position = position;
 
         if (Input.GetKey(KeyCode.Space) && !shooting)
         {
+            AudioSource.PlayClipAtPoint(ShootAudio, position);
             StartCoroutine(SetShootingCooldown());
             GameObject bullet = Object.Instantiate(Bullet);
             

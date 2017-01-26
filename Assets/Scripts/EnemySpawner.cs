@@ -12,14 +12,20 @@ public class EnemySpawner : MonoBehaviour {
     public Sprite[] EnemiesSprite1;
     public Sprite[] EnemiesSprite2;
     public Sprite[] EnemiesSpriteExploding;
+    private List<List<GameObject>> EnemyPositions;
 
-    // Use this for initialization
-    void Start () {
+    public EnemySpawner()
+    {
+        EnemyPositions = new List<List<GameObject>>();
+    }
+
+    public void SpawnEnemies() {
         GameObject newEnemy = EnemyModel;
         Vector2 newPosition = InitialPosition;
 
         for (int i = 0; i < Rows; ++i)
-        { 
+        {
+            EnemyPositions.Add(new List<GameObject>());
             for (int j = 0; j < Columns; j++)
             {
                 newEnemy = Object.Instantiate(newEnemy);
@@ -33,6 +39,10 @@ public class EnemySpawner : MonoBehaviour {
                 newEnemy.GetComponent<EnemyController>().Animation1 = EnemiesSprite1[index];
                 newEnemy.GetComponent<EnemyController>().Animation2 = EnemiesSprite2[index];
                 newEnemy.GetComponent<EnemyController>().Exploding = EnemiesSpriteExploding[index];
+                newEnemy.GetComponent<EnemyController>().X = i;
+                newEnemy.GetComponent<EnemyController>().Y = j;
+                newEnemy.GetComponent<EnemyController>().EnemyType = index;
+                EnemyPositions[i].Add(newEnemy);
             }
         }
     }
@@ -41,4 +51,9 @@ public class EnemySpawner : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    public List<List<GameObject>> GetEnemyPositions()
+    {
+        return this.EnemyPositions;
+    }
 }
