@@ -4,16 +4,10 @@ using UnityEngine;
 
 public class StarSpawnerController : MonoBehaviour {
     public GameObject Star;
-	// Use this for initialization
 	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void FixedUpdate () {
-        SpawnStars();
+        InvokeRepeating("SpawnStars", 0, 0.1f);
     }
-
+	
     private void SpawnStars()
     {
         for (int i = 0; i < Random.Range(0, 50); i++)

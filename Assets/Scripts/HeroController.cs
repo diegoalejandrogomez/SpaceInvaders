@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class HeroController : MonoBehaviour {
     public GameObject Hero;
@@ -8,12 +9,14 @@ public class HeroController : MonoBehaviour {
     public GameObject Bullet;
     public float ShootCooldown;
     public AudioClip ShootAudio;
-
+    public AudioClip ExplotionAudio;
+    public UnityEngine.UI.Text LifeText;
+    public static int Lifes = 3;
     private bool shooting = false;
 	// Use this for initialization
 	void Start () {
-		
-	}
+        LifeText.text = string.Format("Life: {0}", Lifes);
+    }
 
     private IEnumerator SetShootingCooldown()
     {
@@ -30,7 +33,7 @@ public class HeroController : MonoBehaviour {
         else if (Input.GetAxis("Horizontal") < 0)
             input = -1;
 
-        position.x += input * 0.3f  * Speed;
+        position.x += input * 0.15f  * Speed;
         Hero.GetComponent<Transform>().position = position;
 
         if (Input.GetKey(KeyCode.Space) && !shooting)
@@ -44,5 +47,35 @@ public class HeroController : MonoBehaviour {
         }
 
 
+    }
+
+    void OnCollisionEnter2D(Collision2D col)
+    {
+        if (col.gameObject.tag == "EnemyBullet")
+        {
+            Destroy(col.gameObject);
+            AudioSource.PlayClipAtPoint(ExplotionAudio, GetComponent<Transform>().position);
+            Lifes--;
+            LifeText.text = string.Format("Life: {0}", Lifes);
+            if (Lifes == 0)
+            {
+                RestartGame();
+            }
+            StartCoroutine(Respawn());
+        }
+        
+    }
+
+    private static void RestartGame()
+    {
+        Scene scene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(scene.name);
+    }
+
+    private IEnumerator Respawn()
+    {
+        GetComponent<Animator>().SetBool("Exploding", true);
+        yield return new WaitForSeconds(1);
+        GetComponent<Animator>().SetBool("Exploding", false);
     }
 }

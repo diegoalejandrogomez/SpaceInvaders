@@ -5,13 +5,16 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour {
 
     public GameObject EnemyModel;
+
     public int Rows = 5;
     public int Columns = 10;
     public int Offset = 5;
     public Vector3 InitialPosition = new Vector3(-11.46f, 2.13f, -8.17f);
+
     public Sprite[] EnemiesSprite1;
     public Sprite[] EnemiesSprite2;
     public Sprite[] EnemiesSpriteExploding;
+
     private List<List<GameObject>> EnemyPositions;
 
     public EnemySpawner()
@@ -47,11 +50,6 @@ public class EnemySpawner : MonoBehaviour {
         }
     }
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
     public List<List<GameObject>> GetEnemyPositions()
     {
         return this.EnemyPositions;

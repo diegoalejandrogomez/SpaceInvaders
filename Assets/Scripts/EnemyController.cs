@@ -8,21 +8,22 @@ public class EnemyController : MonoBehaviour {
     public Sprite Animation1;
     public Sprite Animation2;
     public Sprite Exploding;
+
     public GameLogicController GameLogicController;
+
     public GameObject Bullet;
+    public AudioClip KilledAudio;
+
     public int EnemyType;
     public int X;
     public int Y;
-
     public float Speed = 1f;
 
     private int index = 0;
     private bool exploding = false;
     
-	// Use this for initialization
 	void Start () {
         GetComponent<SpriteRenderer>().sprite = Animation1;
-
     }
 
     void FixedUpdate()
@@ -45,14 +46,18 @@ public class EnemyController : MonoBehaviour {
 
     void OnCollisionEnter2D(Collision2D col)
     {
-        Destroy(col.gameObject);
-        GameLogicController.CalculatePoints(X, Y);
+        if (col.gameObject.tag == "Bullet")
+        {
+            Destroy(col.gameObject);
+            GameLogicController.CalculatePoints(X, Y);
+        }
     }
 
     public void Destroy()
     {
         exploding = true;
         GetComponent<SpriteRenderer>().sprite = Exploding;
+        AudioSource.PlayClipAtPoint(KilledAudio, GetComponent<Transform>().position);
         Destroy(gameObject, 0.5f);
     }
 
